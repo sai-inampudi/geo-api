@@ -2,8 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   Post,
+  Req,
   Res,
   UseGuards,
   ValidationPipe,
@@ -17,26 +19,63 @@ import { ZipcodeSearchInputDto } from './zipcode/zipcodeSearchInput.dto';
 
 @Controller()
 export class AppController {
-  constructor(private readonly zipcodeService: ZipcodeService) {}
+  private logger: Logger;
+
+  constructor(private readonly zipcodeService: ZipcodeService) {
+    this.logger = new Logger(ZipcodeService.name);
+  }
 
   @Get('/zipcodes/:zipcode')
   @UseGuards(AuthGuard('bearer'))
   async getZipcode(
     @Param('zipcode', new ZipcodePipe()) id,
+    @Req() req,
     @Res() res,
   ): Promise<ZipcodeDto> {
-    return res.json(await this.zipcodeService.getZipcode(id));
+    const {
+      claims: { sub: emailAddress },
+    } = req.user;
+
+    this.logger.log(
+      { zipcode: id, emailAddress },
+      `Begin getting zipcode details for ${id}`,
+    );
+
+    const zipcode = await this.zipcodeService.getZipcode(id);
+
+    this.logger.log(
+      { zipcode: id, emailAddress },
+      `Finish getting zipcode details for ${id}`,
+    );
+
+    return res.json(zipcode);
   }
 
   @Post('/zipcodes/citysearch')
   @UseGuards(AuthGuard('bearer'))
   async getTop3MatchingZipcodes(
     @Body(new ValidationPipe({ transform: true })) body: ZipcodeSearchInputDto,
+    @Req() req,
     @Res() res,
   ): Promise<ZipcodeSearchDto[]> {
     const { city } = body;
+    const {
+      claims: { sub: emailAddress },
+    } = req.user;
+
+    this.logger.log(
+      { city, emailAddress },
+      `Begin searching for zipcodes related to city: ${city}`,
+    );
+
     const zipcodeMatches =
       await this.zipcodeService.getTop3MatchingZipcodes(city);
+
+    this.logger.log(
+      { city, emailAddress },
+      `Finish searching for zipcodes related to city: ${city}, found ${zipcodeMatches.length} matches`,
+    );
+
     return res.json(zipcodeMatches);
   }
 }

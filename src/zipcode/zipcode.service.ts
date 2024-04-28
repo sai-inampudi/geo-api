@@ -16,7 +16,7 @@ var similarity = require('similarity');
 export class ZipcodeService implements OnModuleInit {
   private zipcodesById: Record<string, ZipcodeDto>;
   private zipcodesByCity: Record<string, ZipcodeDto[]>;
-  private logger: Logger; // Add the logger property
+  private logger: Logger;
 
   constructor() {
     this.logger = new Logger(ZipcodeService.name);
@@ -89,7 +89,6 @@ export class ZipcodeService implements OnModuleInit {
    * @throws NotFoundException if the zipcode is not found.
    */
   getZipcode(id: string): ZipcodeDto {
-    this.logger.log({ zipcode: id }, `Getting zipcode details for ${id}`);
     const zipcode = this.zipcodesById[id];
     if (!zipcode) {
       throw new NotFoundException('Zipcode not found');
