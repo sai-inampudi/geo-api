@@ -5,19 +5,22 @@ import {
   Param,
   Post,
   Res,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ZipcodeDto } from './zipcode.dto';
-import { ZipcodePipe } from './zipcode.pipe';
-import { ZipcodeService } from './zipcode.service';
-import { ZipcodeSearchDto } from './zipcodeSearch.dto';
-import { ZipcodeSearchInputDto } from './zipcodeSearchInput.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { ZipcodeDto } from './zipcode/zipcode.dto';
+import { ZipcodePipe } from './zipcode/zipcode.pipe';
+import { ZipcodeService } from './zipcode/zipcode.service';
+import { ZipcodeSearchDto } from './zipcode/zipcodeSearch.dto';
+import { ZipcodeSearchInputDto } from './zipcode/zipcodeSearchInput.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly zipcodeService: ZipcodeService) {}
 
   @Get('/zipcodes/:zipcode')
+  @UseGuards(AuthGuard('bearer'))
   async getZipcode(
     @Param('zipcode', new ZipcodePipe()) id,
     @Res() res,
@@ -25,7 +28,8 @@ export class AppController {
     return res.json(await this.zipcodeService.getZipcode(id));
   }
 
-  @Post('/zipcodes')
+  @Post('/zipcodes/citysearch')
+  @UseGuards(AuthGuard('bearer'))
   async getTop3MatchingZipcodes(
     @Body(new ValidationPipe({ transform: true })) body: ZipcodeSearchInputDto,
     @Res() res,

@@ -45,7 +45,7 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe('POST /zipcodes', () => {
+  describe('POST /zipcodes/city-search', () => {
     it('should return top 3 matching zipcodes successfully when the best matched city has more than 3 zipcodes', () => {
       const expected = [
         {
@@ -82,7 +82,7 @@ describe('AppController (e2e)', () => {
 
       return (
         request(app.getHttpServer())
-          .post('/zipcodes')
+          .post('/zipcodes/city-search')
           /**
            * Olathe is a good city to test because the exact match (Olathe) has
            * more than 3 zipcodes, so we can test that just the top 3 are returned.
@@ -128,7 +128,7 @@ describe('AppController (e2e)', () => {
       ];
 
       return request(app.getHttpServer())
-        .post('/zipcodes')
+        .post('/zipcodes/city-search')
         .send({ city: 'Maryland Hights' })
         .expect(201)
         .expect(JSON.stringify(expected));
@@ -140,14 +140,14 @@ describe('AppController (e2e)', () => {
 
     it('should return 400 when city is empty', () => {
       return request(app.getHttpServer())
-        .post('/zipcodes')
+        .post('/zipcodes/city-search')
         .send({ city: '' })
         .expect(400);
     });
 
     it('should return 400 when city is not a string', () => {
       return request(app.getHttpServer())
-        .post('/zipcodes')
+        .post('/zipcodes/city-search')
         .send({ city: 12345 })
         .expect(400);
     });

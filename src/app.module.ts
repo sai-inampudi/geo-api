@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { AppController } from './app.controller';
-import { ZipcodeService } from './zipcode.service';
+import { AuthModule } from './auth/auth.module';
+import { ZipcodeService } from './zipcode/zipcode.service';
 
 @Module({
   imports: [
+    AuthModule,
     LoggerModule.forRoot({
       pinoHttp: {
         transport: {
