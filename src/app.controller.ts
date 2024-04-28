@@ -17,13 +17,13 @@ export class AppController {
   }
 
   @Post('/zipcodes')
-  async getTop3MatchingCities(
+  async getTop3MatchingZipcodes(
     @Body() body: { city: string },
     @Res() res,
   ): Promise<ZipcodeSearchDto[]> {
     const { city } = body;
     const zipcodeMatches =
-      await this.zipcodeService.getByTop3MatchingCities(city);
+      await this.zipcodeService.getTop3MatchingZipcodes(city);
     return res.json(zipcodeMatches);
   }
 }

@@ -103,28 +103,40 @@ export class ZipcodeService implements OnModuleInit {
    * @param inputCity - The city for which to find matching zipcodes.
    * @returns An array of ZipcodeSearchDto objects representing the top 3 matching zipcodes.
    */
-  getByTop3MatchingCities(inputCity: string): ZipcodeSearchDto[] {
+  getTop3MatchingZipcodes(inputCity: string): ZipcodeSearchDto[] {
+    // Calculate similarity scores for each city
+    // We don't have to worry about case sensitivity because the similarity function is case-insensitive.
+    // similarity uses the Leavenstein distance algorithm to calculate the similarity between two strings.
+    // https://stackoverflow.com/questions/15303631/what-are-some-algorithms-for-comparing-how-similar-two-strings-are
     const citiesWithSimilarityScores = Object.keys(this.zipcodesByCity).map(
       (city) => {
-        // We don't have to worry about case sensitivity because the similarity function is case-insensitive.
-        // similarity uses the Leavenstein distance algorithm to calculate the similarity between two strings.
-        // https://stackoverflow.com/questions/15303631/what-are-some-algorithms-for-comparing-how-similar-two-strings-are
         const score = similarity(city, inputCity);
         return { city, score };
       },
     );
 
+    // Sort cities by similarity score in descending order and get top 3
     const top3Cities = citiesWithSimilarityScores
       .sort((a, b) => b.score - a.score)
       .slice(0, 3);
 
-    const result = [];
+    // Retrieve zipcodes for the top 3 cities and add similarity score
+    const result: ZipcodeSearchDto[] = [];
     top3Cities.forEach(({ city, score }) => {
+      if (result.length >= 3) {
+        return;
+      }
+
       const zipcodesWithScore = this.zipcodesByCity[city].map((zipcode) => ({
         ...zipcode,
         score,
       }));
-      result.push(...zipcodesWithScore);
+
+      zipcodesWithScore.forEach((zipcode) => {
+        if (result.length < 3) {
+          result.push(zipcode);
+        }
+      });
     });
 
     return result;

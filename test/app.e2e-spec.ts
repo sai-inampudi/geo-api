@@ -46,7 +46,54 @@ describe('AppController (e2e)', () => {
   });
 
   describe('POST /zipcodes', () => {
-    it('return top 3 matching cities successfully', () => {
+    it('should return top 3 matching zipcodes successfully when the best matched city has more than 3 zipcodes', () => {
+      const expected = [
+        {
+          zipcode: '66051',
+          city: 'Olathe',
+          state: 'Kansas',
+          stateAbbreviation: 'KS',
+          county: 'Johnson',
+          latitude: 38.8999,
+          longitude: -94.832,
+          score: 1,
+        },
+        {
+          zipcode: '66061',
+          city: 'Olathe',
+          state: 'Kansas',
+          stateAbbreviation: 'KS',
+          county: 'Johnson',
+          latitude: 38.8865,
+          longitude: -94.8204,
+          score: 1,
+        },
+        {
+          zipcode: '66062',
+          city: 'Olathe',
+          state: 'Kansas',
+          stateAbbreviation: 'KS',
+          county: 'Johnson',
+          latitude: 38.8733,
+          longitude: -94.7752,
+          score: 1,
+        },
+      ];
+
+      return (
+        request(app.getHttpServer())
+          .post('/zipcodes')
+          /**
+           * Olathe is a good city to test because the exact match (Olathe) has
+           * more than 3 zipcodes, so we can test that just the top 3 are returned.
+           */
+          .send({ city: 'Olathe' })
+          .expect(201)
+          .expect(JSON.stringify(expected))
+      );
+    });
+
+    it('should be able to return matching zipcodes from different cities', () => {
       const expected = [
         {
           zipcode: '63043',
