@@ -1,7 +1,7 @@
-import * as request from 'supertest';
-import { Test } from '@nestjs/testing';
-import { AppModule } from './../src/app.module';
 import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import * as request from 'supertest';
+import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -20,9 +20,18 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET)', () => {
+    const expected = {
+      zipcode: '00501',
+      city: 'Holtsville',
+      state: 'New York',
+      stateAbbreviation: 'NY',
+      county: 'Suffolk',
+      latitude: 40.8154,
+      longitude: -73.0451,
+    };
     return request(app.getHttpServer())
-      .get('/')
+      .get('/zipcodes/00501')
       .expect(200)
-      .expect('Hello World!');
+      .expect(JSON.stringify(expected));
   });
 });
