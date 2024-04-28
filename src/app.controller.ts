@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Logger,
   Param,
   Post,
@@ -53,6 +54,7 @@ export class AppController {
 
   @Post('/zipcodes/citysearch')
   @UseGuards(AuthGuard('bearer'))
+  @HttpCode(200)
   async getTop3MatchingZipcodes(
     @Body(new ValidationPipe({ transform: true })) body: ZipcodeSearchInputDto,
     @Req() req,
