@@ -1,14 +1,38 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ZipcodeDto } from './zipcode.dto';
 import { ZipcodePipe } from './zipcode.pipe';
 import { ZipcodeService } from './zipcode.service';
+import { ZipcodeSearchDto } from './zipcodeSearch.dto';
+import { ZipcodeSearchInputDto } from './zipcodeSearchInput.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly zipcodeService: ZipcodeService) {}
 
   @Get('/zipcodes/:zipcode')
-  async getZipcode(@Param('zipcode', new ZipcodePipe()) id, @Res() res): Promise<ZipcodeDto> {
-      return res.json(await this.zipcodeService.getZipcode(id));
+  async getZipcode(
+    @Param('zipcode', new ZipcodePipe()) id,
+    @Res() res,
+  ): Promise<ZipcodeDto> {
+    return res.json(await this.zipcodeService.getZipcode(id));
+  }
+
+  @Post('/zipcodes')
+  async getTop3MatchingZipcodes(
+    @Body(new ValidationPipe({ transform: true })) body: ZipcodeSearchInputDto,
+    @Res() res,
+  ): Promise<ZipcodeSearchDto[]> {
+    const { city } = body;
+    const zipcodeMatches =
+      await this.zipcodeService.getTop3MatchingZipcodes(city);
+    return res.json(zipcodeMatches);
   }
 }
