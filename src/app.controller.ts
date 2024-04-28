@@ -22,6 +22,8 @@ export class AppController {
     @Res() res,
   ): Promise<ZipcodeSearchDto[]> {
     const { city } = body;
-    return res.json(await this.zipcodeService.getByTop3MatchingCities(city));
+    const zipcodeMatches =
+      await this.zipcodeService.getByTop3MatchingCities(city);
+    return res.json(zipcodeMatches);
   }
 }

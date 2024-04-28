@@ -5,9 +5,9 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import * as fs from 'fs';
-import { similarity } from 'similarity';
 import { ZipcodeDto } from './zipcode.dto';
 import { ZipcodeSearchDto } from './zipcodeSearch.dto';
+var similarity = require('similarity');
 
 @Injectable()
 /**
@@ -115,12 +115,16 @@ export class ZipcodeService implements OnModuleInit {
     );
 
     const top3Cities = citiesWithSimilarityScores
-      .sort((a, b) => a.score - b.score)
+      .sort((a, b) => b.score - a.score)
       .slice(0, 3);
 
     const result = [];
-    top3Cities.forEach((city) => {
-      result.concat(...this.zipcodesByCity[city.city]);
+    top3Cities.forEach(({ city, score }) => {
+      const zipcodesWithScore = this.zipcodesByCity[city].map((zipcode) => ({
+        ...zipcode,
+        score,
+      }));
+      result.push(...zipcodesWithScore);
     });
 
     return result;
