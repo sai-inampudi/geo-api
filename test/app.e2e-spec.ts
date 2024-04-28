@@ -133,5 +133,23 @@ describe('AppController (e2e)', () => {
         .expect(201)
         .expect(JSON.stringify(expected));
     });
+
+    it('should return 400 when city is not provided', () => {
+      return request(app.getHttpServer()).post('/zipcodes').expect(400);
+    });
+
+    it('should return 400 when city is empty', () => {
+      return request(app.getHttpServer())
+        .post('/zipcodes')
+        .send({ city: '' })
+        .expect(400);
+    });
+
+    it('should return 400 when city is not a string', () => {
+      return request(app.getHttpServer())
+        .post('/zipcodes')
+        .send({ city: 12345 })
+        .expect(400);
+    });
   });
 });

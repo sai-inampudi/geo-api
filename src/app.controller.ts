@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ZipcodeDto } from './zipcode.dto';
 import { ZipcodePipe } from './zipcode.pipe';
 import { ZipcodeService } from './zipcode.service';
 import { ZipcodeSearchDto } from './zipcodeSearch.dto';
+import { ZipcodeSearchInputDto } from './zipcodeSearchInput.dto';
 
 @Controller()
 export class AppController {
@@ -18,7 +27,7 @@ export class AppController {
 
   @Post('/zipcodes')
   async getTop3MatchingZipcodes(
-    @Body() body: { city: string },
+    @Body(new ValidationPipe({ transform: true })) body: ZipcodeSearchInputDto,
     @Res() res,
   ): Promise<ZipcodeSearchDto[]> {
     const { city } = body;
