@@ -12,6 +12,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiParam } from '@nestjs/swagger';
 import { ZipcodeDto } from './zipcode/zipcode.dto';
 import { ZipcodePipe } from './zipcode/zipcode.pipe';
 import { ZipcodeService } from './zipcode/zipcode.service';
@@ -27,6 +28,12 @@ export class AppController {
   }
 
   @Get('/zipcodes/:zipcode')
+  @ApiParam({
+    name: 'zipcode',
+    required: true,
+    description: 'A 5-digit US zipcode',
+    schema: { type: 'string' },
+  })
   @UseGuards(AuthGuard('bearer'))
   async getZipcode(
     @Param('zipcode', new ZipcodePipe()) id,

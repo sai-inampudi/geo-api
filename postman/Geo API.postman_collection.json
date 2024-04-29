@@ -1,284 +1,465 @@
 {
-	"info": {
-		"_postman_id": "8297a9fd-8a45-43ff-a97a-a376c5ec7d5e",
-		"name": "Geo API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3010253"
-	},
-	"item": [
-		{
-			"name": "Zipcode",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Successful GET request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
-							"});",
-							"",
-							"pm.test(\"Zipcode object returned is valid\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.zipcode).to.eql('00501');",
-							"    pm.expect(jsonData.city).to.eql('Holtsville');",
-							"    pm.expect(jsonData.state).to.eql('New York');",
-							"    pm.expect(jsonData.stateAbbreviation).to.eql('NY');",
-							"    pm.expect(jsonData.county).to.eql('Suffolk');",
-							"    pm.expect(jsonData.latitude).to.eql(40.8154,);",
-							"    pm.expect(jsonData.longitude).to.eql(-73.0451);",
-							"    ",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{geoApiBaseUrl}}/zipcodes/:zipcode",
-					"host": [
-						"{{geoApiBaseUrl}}"
-					],
-					"path": [
-						"zipcodes",
-						":zipcode"
-					],
-					"variable": [
-						{
-							"key": "zipcode",
-							"value": "00501"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "City Search [Complete Match]",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Successful POST request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
-							"});",
-							"",
-							"pm.test(\"Response contains correct 3 Zipcodes\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.length).to.eql(3);",
-							"",
-							"    const firstZipCode = jsonData[0].zipcode;",
-							"    const secondZipCode = jsonData[1].zipcode;",
-							"    const thirdZipCode = jsonData[2].zipcode;",
-							"",
-							"    const expectedZipCodes = [",
-							"        \"66051\", \"66061\", \"66062\"",
-							"    ];",
-							"    pm.expect(expectedZipCodes.includes(firstZipCode)).to.eql(true);",
-							"    pm.expect(expectedZipCodes.includes(secondZipCode)).to.eql(true);",
-							"    pm.expect(expectedZipCodes.includes(thirdZipCode)).to.eql(true);",
-							"});",
-							"",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"city\": \"Olathe\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/zipcodes/citysearch",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"zipcodes",
-						"citysearch"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "City Search [Partial Match]",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Successful POST request\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
-							"});",
-							"",
-							"pm.test(\"Response contains correct 3 Zipcodes\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.length).to.eql(3);",
-							"",
-							"    const firstZipCode = jsonData[0].zipcode;",
-							"    const secondZipCode = jsonData[1].zipcode;",
-							"    const thirdZipCode = jsonData[2].zipcode;",
-							"",
-							"    const expectedZipCodes = [",
-							"        \"63043\", \"08732\", \"17832\"",
-							"    ];",
-							"    pm.expect(expectedZipCodes.includes(firstZipCode)).to.eql(true);",
-							"    pm.expect(expectedZipCodes.includes(secondZipCode)).to.eql(true);",
-							"    pm.expect(expectedZipCodes.includes(thirdZipCode)).to.eql(true);",
-							"});",
-							"",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"city\": \"Maryland Hights\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/zipcodes/citysearch",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"zipcodes",
-						"citysearch"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"auth": {
-		"type": "oauth2",
-		"oauth2": [
-			{
-				"key": "client_authentication",
-				"value": "body",
-				"type": "string"
-			},
-			{
-				"key": "scope",
-				"value": "openid email profile",
-				"type": "string"
-			},
-			{
-				"key": "clientSecret",
-				"value": "",
-				"type": "string"
-			},
-			{
-				"key": "tokenName",
-				"value": "Okta",
-				"type": "string"
-			},
-			{
-				"key": "grant_type",
-				"value": "authorization_code_with_pkce",
-				"type": "string"
-			},
-			{
-				"key": "state",
-				"value": "asdasd",
-				"type": "string"
-			},
-			{
-				"key": "useBrowser",
-				"value": true,
-				"type": "boolean"
-			},
-			{
-				"key": "clientId",
-				"value": "{{clientId}}",
-				"type": "string"
-			},
-			{
-				"key": "accessTokenUrl",
-				"value": "{{oktaDomainUrl}}/oauth2/default/v1/token",
-				"type": "string"
-			},
-			{
-				"key": "authUrl",
-				"value": "{{oktaDomainUrl}}/oauth2/default/v1/authorize",
-				"type": "string"
-			},
-			{
-				"key": "redirect_uri",
-				"value": "https://oauth.pstmn.io/v1/callback",
-				"type": "string"
-			},
-			{
-				"key": "addTokenTo",
-				"value": "header",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	]
+  "info": {
+    "_postman_id": "8297a9fd-8a45-43ff-a97a-a376c5ec7d5e",
+    "name": "Geo API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3010253"
+  },
+  "item": [
+    {
+      "name": "Zipcode",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful GET request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "",
+              "pm.test(\"Zipcode object returned is valid\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.zipcode).to.eql('00501');",
+              "    pm.expect(jsonData.city).to.eql('Holtsville');",
+              "    pm.expect(jsonData.state).to.eql('New York');",
+              "    pm.expect(jsonData.stateAbbreviation).to.eql('NY');",
+              "    pm.expect(jsonData.county).to.eql('Suffolk');",
+              "    pm.expect(jsonData.latitude).to.eql(40.8154,);",
+              "    pm.expect(jsonData.longitude).to.eql(-73.0451);",
+              "    ",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "host": true
+        }
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{geoApiBaseUrl}}/zipcodes/:zipcode",
+          "host": ["{{geoApiBaseUrl}}"],
+          "path": ["zipcodes", ":zipcode"],
+          "variable": [
+            {
+              "key": "zipcode",
+              "value": "00501"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Zipcode [Invalid Input - 400]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Should return 400 status\", function () {",
+              "    pm.expect(pm.response.code).to.eql(400)",
+              "});",
+              "",
+              "pm.test(\"Should return error as Bad Request\", function () {",
+              "    pm.expect(pm.response.json().error).to.eql(\"Bad Request\")",
+              "});",
+              "",
+              "pm.test(\"Should return message as Invalid US zipcode\", function () {",
+              "    pm.expect(pm.response.json().message).to.eql(\"Invalid US zipcode\")",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "host": true
+        }
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{geoApiBaseUrl}}/zipcodes/:zipcode",
+          "host": ["{{geoApiBaseUrl}}"],
+          "path": ["zipcodes", ":zipcode"],
+          "variable": [
+            {
+              "key": "zipcode",
+              "value": "999999"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Zipcode [Not Found - 404]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Should return 404 status\", function () {",
+              "    pm.expect(pm.response.code).to.eql(404)",
+              "});",
+              "",
+              "pm.test(\"Should return message as Zipcode not found\", function () {",
+              "    pm.expect(pm.response.json().message).to.eql(\"Zipcode not found\")",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "host": true
+        }
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{geoApiBaseUrl}}/zipcodes/:zipcode",
+          "host": ["{{geoApiBaseUrl}}"],
+          "path": ["zipcodes", ":zipcode"],
+          "variable": [
+            {
+              "key": "zipcode",
+              "value": "99999"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "City Search [Complete Match]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "",
+              "pm.test(\"Response contains correct 3 Zipcodes\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.length).to.eql(3);",
+              "",
+              "    const firstZipCode = jsonData[0].zipcode;",
+              "    const secondZipCode = jsonData[1].zipcode;",
+              "    const thirdZipCode = jsonData[2].zipcode;",
+              "",
+              "    const expectedZipCodes = [",
+              "        \"66051\", \"66061\", \"66062\"",
+              "    ];",
+              "    pm.expect(expectedZipCodes.includes(firstZipCode)).to.eql(true);",
+              "    pm.expect(expectedZipCodes.includes(secondZipCode)).to.eql(true);",
+              "    pm.expect(expectedZipCodes.includes(thirdZipCode)).to.eql(true);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "host": true
+        }
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"city\": \"Olathe\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/zipcodes/citysearch",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["zipcodes", "citysearch"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "City Search [Partial Match]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+              "});",
+              "",
+              "pm.test(\"Response contains correct 3 Zipcodes\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.length).to.eql(3);",
+              "",
+              "    const firstZipCode = jsonData[0].zipcode;",
+              "    const secondZipCode = jsonData[1].zipcode;",
+              "    const thirdZipCode = jsonData[2].zipcode;",
+              "",
+              "    const expectedZipCodes = [",
+              "        \"63043\", \"08732\", \"17832\"",
+              "    ];",
+              "    pm.expect(expectedZipCodes.includes(firstZipCode)).to.eql(true);",
+              "    pm.expect(expectedZipCodes.includes(secondZipCode)).to.eql(true);",
+              "    pm.expect(expectedZipCodes.includes(thirdZipCode)).to.eql(true);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "host": true
+        }
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"city\": \"Maryland Hights\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/zipcodes/citysearch",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["zipcodes", "citysearch"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "City Search [Invalid Input - 400]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Should return 400 status\", function () {",
+              "    pm.expect(pm.response.code).to.eql(400)",
+              "});",
+              "",
+              "pm.test(\"Should return error as Bad Request\", function () {",
+              "    pm.expect(pm.response.json().error).to.eql(\"Bad Request\")",
+              "});",
+              "",
+              "pm.test(\"Should return message as city must be a string\", function () {",
+              "    const message = pm.response.json().message;",
+              "    pm.expect(message.length).to.eql(1)",
+              "    pm.expect(message[0]).to.eql(\"city must be a string\")",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "host": true
+        }
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"city\": 1234\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/zipcodes/citysearch",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["zipcodes", "citysearch"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "City Search [No Request Body - 400]",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Should return 400 status\", function () {",
+              "    pm.expect(pm.response.code).to.eql(400)",
+              "});",
+              "",
+              "pm.test(\"Should return error as Bad Request\", function () {",
+              "    pm.expect(pm.response.json().error).to.eql(\"Bad Request\")",
+              "});",
+              "",
+              "pm.test(\"Should return 'city must be a string' under message array\", function () {",
+              "    const message = pm.response.json().message;",
+              "    pm.expect(message.length).to.eql(2)",
+              "    pm.expect(message[0]).to.eql(\"city must be a string\")",
+              "});",
+              "",
+              "pm.test(\"Should return 'city should not be empty' under message array\", function () {",
+              "    const message = pm.response.json().message;",
+              "    pm.expect(message.length).to.eql(2)",
+              "    pm.expect(message[1]).to.eql(\"city should not be empty\")",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {
+          "host": true
+        }
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/zipcodes/citysearch",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["zipcodes", "citysearch"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "client_authentication",
+        "value": "body",
+        "type": "string"
+      },
+      {
+        "key": "scope",
+        "value": "openid email profile",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "Okta",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "authorization_code_with_pkce",
+        "type": "string"
+      },
+      {
+        "key": "state",
+        "value": "asdasd",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": true,
+        "type": "boolean"
+      },
+      {
+        "key": "clientId",
+        "value": "{{clientId}}",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{oktaDomainUrl}}/oauth2/default/v1/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{oktaDomainUrl}}/oauth2/default/v1/authorize",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oauth.pstmn.io/v1/callback",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    }
+  ]
 }
