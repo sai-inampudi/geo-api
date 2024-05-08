@@ -51,9 +51,12 @@ There are two ways to test the application:
    - To run unit tests, run the following command: `npm run test`
 2. Postman Test Suite
    - The API comes with a built in postman test suite that tests all the various scenarios for both of the endpoints (GET /zipcode and POST /citysearch) such as 400, 404s etc
+     - ⚠️ WARNING: The test suite was created with Postman Desktop application in mind, it will not work for Postman Web clients so please use the Desktop app ⚠️ 
    - Download the Postman collection along with the Postman environment from [here](/postman/) and import them in Postman
    - After you finish the import, point your local environment to the downloaded one (`Geo API - Local`)
-   - Click on the GEO API collection, go to Authorization tab and scroll down to the end and click on `Get New Access Token` button
+   - Click on the GEO API collection, go to Authorization tab and scroll down to the end and click on `Get New Access Token` button. ⚠️ When you click on Get New Access Token, Postman will open a new browser window requesting Username and Password. I created a test account for you to use in order to be able to access this API, please use the following credentials:
+     - Username: `testuser@test.com`
+     - Password: `1nsight1`
      - ![Postman Step 0](./resources/postman_step_0.png)
    - Postman should then automatically open a Browser window and begin the authentication process. Ideally, you shouldn't have to do anything after -- it should finish authenticating and redirect back to Postman app where you are then provided the option to click on `Use Token` for the Okta token which you should click.
      - ![Postman Step 1](./resources/postman_step_1.png)
